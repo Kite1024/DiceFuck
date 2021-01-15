@@ -50,7 +50,7 @@ long progsize = 0;
 
 // List of executed (face,value) instruction pairs.
 // And instruction pointer (ip) pointing to the current instruction index
-ubyte ins[3000];
+ubyte ins[30000];
 int inssize = 0;
 int ip = 0;
 
