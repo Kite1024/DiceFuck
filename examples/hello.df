@@ -5,7 +5,7 @@ Eight byte cells
     d20=4
 
 Setup
-    d12=12      c0=6    c0 is the main loop counter
+    d12         c0=6    c0 is the main loop counter
     d12=8       c0=8
 
     d10         [

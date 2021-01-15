@@ -1,7 +1,8 @@
-default: compile
+.PHONY: compile test seven test-dice-small test-transpile
 
-.PHONY: compile test seven small-test
-compile: dice
+default: all
+
+all: dice bf2df
 
 CC = gcc
 CSTD = -std=c99
@@ -46,11 +47,25 @@ dice-small: dice.c
 	$(CC) $(COPTS_SMALL) -o dice-small dice.c
 	strip $(STRIP_OPT) dice-small.exe
 
-small-test: dice-small
-	dice-small hello.df
+test-dice-small: dice-small
+	dice-small ../examples/hello.df
 
 test: dice
-	dice hello.df
+	dice ../examples/hello.df
 
 seven: dice
-	dice seven.df
+	dice ../examples/seven.df
+
+bf2df: bf2df.c
+	$(CC) $(COPTS) -o bf2df bf2df.c
+
+test-transpile: bf2df dice
+	bf2df bf/hello.bf bf/hello.df
+	dice bf/hello.df
+	bf2df bf/fact.bf bf/fact.df
+	dice bf/fact.df
+# TODO: Broken :(
+#	bf2df bf/bottles.bf bf/bottles.df
+#	dice bf/bottles.df
+#	bf2df bf/mandelbrot.bf bf/mandelbrot.df
+#	dice bf/mandelbrot.df
