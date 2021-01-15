@@ -1,0 +1,27 @@
+
+Print seven
+Transcribed from https://en.wikipedia.org/wiki/Brainfuck
+
+Eight byte cells
+    d20=4
+
+Put 7 in the first cell
+    d12=12      Add 6 to c0
+    d12=7       Add 1 to c0
+
+We cannot output this value to the terminal since it is not ASCII encoded!
+To display the ASCII character "7" we must add 48 to the value 7
+48 = 6 * 8 so let's use another loop to help us!
+    d4=3        >
+    d12=12      Add 6 to c1
+    d12=8       Add 2 to c1
+
+    d10         [
+    d4=2        <
+    d12=12      Add 6 to c0
+    d4=3        >
+    d12=6       Subtract 1 from c1
+    d100        ]
+    
+    d4=2        <
+    d6          Print
