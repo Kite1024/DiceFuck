@@ -55,16 +55,16 @@ int inssize = 0;
 int ip = 0;
 
 // Output buffer and size
-char outbuf = 0;
+ubyte outbuf = 0;
 int outbuf_bits = 0;
 
 // Input buffer and size
-char inbuf = 0;
+ubyte inbuf = 0;
 int inbuf_bits = 0;
 
 // Reading direction and stack, used for loops
 int dir = 1; // 1=forward, -1=backward
-int stack = 0;
+int stack = 0; // nesting level
 
 void error(char* str) {
     fprintf(
@@ -136,9 +136,6 @@ void addval(int n) {
 }
 
 void subval(int n) {
-    // bit magic
-    
-
     // Adapted from
     // https://stackoverflow.com/questions/61488609/substract-an-char-array-minus-int-in-c
     
@@ -297,6 +294,11 @@ void dice(int sides, int value) {
         break;
 
     case 10:
+        if (value != 10) {
+            error("Cannot have d10 with a value except 10");
+        }
+
+        // Termination condition
         if (stack == 1 && dir == -1) {
             // We're seeking back from a ']', so reset
             dir = 1;
@@ -308,10 +310,6 @@ void dice(int sides, int value) {
         }
 
         // Start a '[' loop
-        if (value != 10) {
-            error("Cannot have d10 with a value except 10");
-        }
-
         for (int i = 0; i < n_bytes; i++) {
             if (cur->value[i] != 0) {
                 return; // not zero, do nothing
@@ -325,6 +323,11 @@ void dice(int sides, int value) {
         break;
 
     case 100:
+        if (value != 100) {
+            error("Cannot have d100 with a value except 100");
+        }
+
+        // Termination instruction
         if (stack == 1 && dir == 1) {
             // We're seeking forward from a matching '[', reset
             dir = 1;
@@ -333,10 +336,6 @@ void dice(int sides, int value) {
         } else if (stack > 0) {
             stack -= dir; // Already in a loop, but seeking
             return;
-        }
-
-        if (value != 100) {
-            error("Cannot have d100 with a value except 100");
         }
 
         // stack==0, backward seeking
@@ -358,10 +357,7 @@ void dice(int sides, int value) {
             error("d20 used as non-start instruction");
         }
 
-        n_bits = 1;
-        for (int i = 1; i < value; i++) {
-            n_bits <<= 1;
-        }
+        n_bits = 1 << (value-1);
         n_bytes = ((n_bits - 1) / 8) + 1;
         DEBUG(1, "Cell bits: %d, bytes: %d\n", n_bits, n_bytes)
         
@@ -387,7 +383,7 @@ void readfile(char* file) {
     progsize = ftell(fp);
     rewind(fp);
 
-    prog = calloc(1, progsize+1);
+    prog = malloc(progsize+1);
     if (!prog) {
         fclose(fp);
         fputs("prog alloc fail\n", stderr);
@@ -453,7 +449,7 @@ void parseprog() {
         if (prog[pos] == '=' && (progsize - pos) >= 3) {
             pos++;
             skip = matchint(prog, pos, &value);
-            if (value < 0) {
+            if (value < 0) { // Handle d5=Bla
                 value = sides;
             } else {
                 pos += skip;
