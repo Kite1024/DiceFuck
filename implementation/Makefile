@@ -2,7 +2,7 @@
 
 default: all
 
-all: dice bf2df
+all: dice bf2df dicec
 
 CC = gcc
 CSTD = -std=c99

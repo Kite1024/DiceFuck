@@ -1,19 +1,42 @@
 #include <stdio.h>
 #include <stdlib.h>
+#include <string.h>
 
 #include "bc.h"
 
-#define OUT(fmt, ...) printf(fmt "\n", ##__VA_ARGS__);
+#define OUT(fmt, ...) fprintf(fp, fmt "\n", ##__VA_ARGS__);
 
 int main(int argc, char* argv[]) {
     if (argc < 3) {
-        printf("Usage: %s <input> <output>\n", argv[0]);
+        printf("Usage: %s [-s] <input> <output>\n", argv[0]);
         exit(1);
+    }
+
+    int source = 0;
+    if (strcmp(argv[1], "-s") == 0) {
+        if (argc < 4) {
+            printf("Usage: %s [-s] <input> <output>\n", argv[0]);
+            printf("\t-s\t\tOutput instead the C source");
+            exit(1);
+        }
+
+        source = 1;
+
+        argv[1] = argv[2];
+        argv[2] = argv[3];
     }
 
     ubyte* ins = malloc(600000);
     int inssize = bc_read(argv[1], ins, 600000);
     
+    
+    char tmp[512];
+    strcpy(tmp, argv[2]);
+    if (!source) {
+        strcat(tmp, ".c");
+    }
+    FILE* fp = fopen(tmp, "wb");
+
     OUT("#include <stdio.h>")
     OUT("")
     OUT("unsigned char a[30000];")
@@ -69,6 +92,14 @@ int main(int argc, char* argv[]) {
     }
 
     OUT("}")
+
+    fclose(fp);
+
+    if (!source) {
+        char tmp2[512];
+        sprintf(tmp2, "gcc -O2 -o %s %s && rm %s", argv[2], tmp, tmp);
+        system(tmp2);
+    }
 
     return 0;
 }
