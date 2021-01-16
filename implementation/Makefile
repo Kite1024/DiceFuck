@@ -40,11 +40,14 @@ STRIP_OPT =\
 	-R .comment\
 	-R .gnu.version
 
-dice: dice.c
-	$(CC) $(COPTS) -o dice dice.c
+DICE_SRC = dice.c bc.c
+DICEC_SRC = dicec.c bc.c
 
-dice-small: dice.c
-	$(CC) $(COPTS_SMALL) -o dice-small dice.c
+dice: $(DICE_SRC)
+	$(CC) $(COPTS) -o dice $(DICE_SRC)
+
+dice-small: $(DICE_SRC)
+	$(CC) $(COPTS_SMALL) -o dice-small $(DICE_SRC)
 	strip $(STRIP_OPT) dice-small.exe
 
 test-dice-small: dice-small
@@ -69,3 +72,6 @@ test-transpile: bf2df dice
 #	dice bf/bottles.df
 #	bf2df bf/mandelbrot.bf bf/mandelbrot.df
 #	dice bf/mandelbrot.df
+
+dicec: $(DICEC_SRC)
+	$(CC) $(COPTS) -o dicec $(DICEC_SRC)
