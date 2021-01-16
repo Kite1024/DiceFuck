@@ -11,8 +11,8 @@ int main(int argc, char* argv[]) {
         exit(1);
     }
 
-    ubyte* ins = malloc(30000);
-    int inssize = bc_read(argv[1], ins, 30000);
+    ubyte* ins = malloc(600000);
+    int inssize = bc_read(argv[1], ins, 600000);
     
     OUT("#include <stdio.h>")
     OUT("")
@@ -31,25 +31,34 @@ int main(int argc, char* argv[]) {
         switch (s) {
         case 4:
             if (v == 1 || v == 2) {
-                OUT("i -= %d", 3 - v)
+                OUT("i -= %d;", 3 - v)
             } else {
-                
+                OUT("i += %d;", v - 2)
             }
             break;
 
         case 12:
+            if (v >= 1 && v <= 6) {
+                OUT("a[i] -= %d;", 7 - v)
+            } else {
+                OUT("a[i] += %d;", v - 6)
+            }
             break;
             
         case 6:
+            OUT("putchar(a[i]);")
             break;
 
         case 8:
+            OUT("a[i] = getchar();")
             break;
         
         case 10:
+            OUT("while (a[i]) {")
             break;
 
         case 100:
+            OUT("}")
             break;
 
         case 20:

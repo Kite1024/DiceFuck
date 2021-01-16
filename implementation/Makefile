@@ -6,7 +6,7 @@ all: dice bf2df
 
 CC = gcc
 CSTD = -std=c99
-COPTS = -Wall -Wextra -Werror -Wno-unused-parameter
+COPTS = -Wall -Wextra -Werror -Wno-unused-parameter -g
 COPTS_SMALL = $(COPTS) \
 	-s\
 	-Os\
@@ -67,6 +67,8 @@ test-transpile: bf2df dice
 	dice bf/hello.df
 	bf2df bf/fact.bf bf/fact.df
 	dice bf/fact.df
+	bf2df bf/hanoi.bf bf/hanoi.df
+	dice bf/hanoi.df
 # TODO: Broken :(
 #	bf2df bf/bottles.bf bf/bottles.df
 #	dice bf/bottles.df
