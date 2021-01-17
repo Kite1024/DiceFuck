@@ -77,3 +77,7 @@ test-transpile: bf2df dice
 
 dicec: $(DICEC_SRC)
 	$(CC) $(COPTS) -o dicec $(DICEC_SRC)
+
+test-dicec: dicec
+	dicec ../examples/hello.df hello.exe
+	hello.exe

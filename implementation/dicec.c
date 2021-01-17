@@ -29,13 +29,12 @@ int main(int argc, char* argv[]) {
     ubyte* ins = malloc(600000);
     int inssize = bc_read(argv[1], ins, 600000);
     
-    
-    char tmp[512];
-    strcpy(tmp, argv[2]);
+    char outtemp[512];
+    strcpy(outtemp, argv[2]);
     if (!source) {
-        strcat(tmp, ".c");
+        strcat(outtemp, ".c");
     }
-    FILE* fp = fopen(tmp, "wb");
+    FILE* fp = fopen(outtemp, "wb");
 
     OUT("#include <stdio.h>")
     OUT("")
@@ -96,9 +95,9 @@ int main(int argc, char* argv[]) {
     fclose(fp);
 
     if (!source) {
-        char tmp2[512];
-        sprintf(tmp2, "gcc -O2 -o %s %s && rm %s", argv[2], tmp, tmp);
-        system(tmp2);
+        char cmd[512];
+        sprintf(cmd, "gcc -O2 -o %s %s && rm %s", argv[2], outtemp, outtemp);
+        system(cmd);
     }
 
     return 0;
