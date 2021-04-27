@@ -1,0 +1,93 @@
+Print "Hello World!", with capitals
+Transcribed from https://en.wikipedia.org/wiki/Brainfuck
+
+Eight byte cells
+    d20=4
+
+Setup
+    d12         c0=6    c0 is the main loop counter
+    d12=8       c0=8
+
+    d10         [
+    
+    d4=3        >
+    d12=10      Add 4 to c1 (counter)
+
+    d10         [
+    d4=3        >
+    d12=8       Add 2 to c2
+    d4=3        >
+    d12=9       Add 3 to c3
+    d4=3        >
+    d12=9       Add 3 to c4
+    d4=3        >
+    d12=7       Add 1 to c5
+    d4=1        <<
+    d4=1        <<
+    d12=6       Subtract 1 from c1 (counter)
+    d100        ] -- Loop until c1 is 0, which is 4 iterations total
+    
+    d4=3        >
+    d12=7       Add 1 to c2
+    d4=3        >
+    d12=7       Add 1 to c3
+    d4=3        >
+    d12=6       Subtract 1 from c4
+    d4=4        >>
+    d12=7       Add 1 to c6 (c6==1)
+    d10         [ -- Go back to first zero cell (c1)
+    d4=2        <        
+    d100        ]
+
+    d4=2        <
+    d12=6       Subtract 1 from main loop counter (c0)
+
+    d100        ] -- main loop
+    
+Setup loop done:
+The result of this is:
+Cell No :   0   1   2   3   4   5   6
+Contents:   0   0  72 104  88  32   8
+Pointer :   ^
+
+Printing
+    d4=4        >>
+    d6          c2=72, which is 'H'
+
+    d4=3        >
+    d12=4       Subtract 3 from c3 to get 101, which is 'e'
+    d6          Print
+
+    d12         Add 6 to c3, shift to 'l'
+    d12=7       Add 1 to c3, shift to 'l'
+    d6          Print
+    d6          Print
+
+    d12=9       Add 3 to c3, shifts to 'o'
+    d6          Print
+
+    d4=4        >> -- go to c5 (32) for space
+    d6          Print
+
+    d4=2        <
+    d12=6       Subtract 1 from c4 to get 'W'
+    d6          Print
+
+    d4=2        < -- c3 was set to 'o' from 'Hello', use again for 'World'
+    d6          Print
+
+    d12=9       Shift c3 to 'r'
+    d6          Print
+    d12=1       Shift c3 to 'l'
+    d6          Print
+    d12=1       Shift c3
+    d12=5       Shift c3 to 'd'
+    d6
+
+    d4=4        Go to c5
+    d12=7       Add 1 to c5 to get '!'
+    d6
+
+    d4=3        Go to c6
+    d12=8       Add 2 to c6 to get a newline ('\n')
+    d6          Print
